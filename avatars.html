@@ -7,7 +7,7 @@ kiwi.plugin('custom-avatars', function(kiwi) {
         http.onreadystatechange = function() {
             if (this.readyState == this.DONE) {
                 const nonce = Date.parse(http.getResponseHeader('last-modified'));
-                callback(this.status != 404, nonce);
+                callback(this.status >= 200 && this.status < 400, nonce);
             }
         };
         http.send();
