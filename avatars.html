@@ -38,7 +38,7 @@ kiwi.plugin('custom-avatars', function(kiwi) {
 
     // Set a listener for IRC messages
     kiwi.on('irc.message', function(event, network) {
-        updateAvatar(user.nick, network.id);
+        updateAvatar(event.nick, network.id);
     });
 
     // Set a listener for the irc.registered event
