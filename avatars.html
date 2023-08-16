@@ -20,7 +20,7 @@ kiwi.plugin('custom-avatars', function(kiwi) {
             var usersArray = Object.values(activeBuffer.users);
             usersArray.forEach(function(user) {
                 var username = user.nick;
-                var avatarURL = 'http://sjc1.vultrobjects.com/ewnix-avatars/' + username.toLowerCase() + '/avatar.png';
+                var avatarURL = 'https://sjc1.vultrobjects.com/ewnix-avatars/' + username.toLowerCase() + '/avatar.png';
                 imageBurper(avatarURL, function(exists, nonce) {
                     if (exists) {
                         kiwi.state.addUser(activeBuffer.networkid, {nick: username, avatar: {
@@ -35,7 +35,7 @@ kiwi.plugin('custom-avatars', function(kiwi) {
     // Set a listener for IRC messages
     kiwi.on('irc.message', function(event, network) {
         var nick = event.nick;
-        var avatarURL = 'http://sjc1.vultrobjects.com/ewnix-avatars/' + nick.toLowerCase() + '/avatar.png';
+        var avatarURL = 'https://sjc1.vultrobjects.com/ewnix-avatars/' + nick.toLowerCase() + '/avatar.png';
         imageBurper(avatarURL, function(exists, nonce) {
             if (exists) {
                 kiwi.state.addUser(network.id, {nick: nick, avatar: {
