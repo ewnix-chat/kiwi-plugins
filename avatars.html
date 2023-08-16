@@ -1,11 +1,16 @@
 <script>
 kiwi.plugin('custom-avatars', function(kiwi) {
     // Function to check if an image exists at a given URL
-    function imageExists(url, callback) {
-        var img = new Image();
-        img.onload = function() { callback(true); };
-        img.onerror = function() { callback(false); };
-        img.src = url;
+    function imageBurper(url, callback) {
+        var http = new XMLHttpRequest();
+        http.open('HEAD', url + '?' + Math.floor(Date.now() / 1000));
+        http.onreadystatechange = function() {
+        if (this.readyState == this.DONE) {
+        	const nonce = Date.parse(http.getResponseHeader('last-modified'));
+            callback(this.status != 404, nonce);
+        }
+    };
+    http.send();
     }
 
     // Function to update avatars
@@ -16,10 +21,10 @@ kiwi.plugin('custom-avatars', function(kiwi) {
             usersArray.forEach(function(user) {
                 var username = user.nick;
                 var avatarURL = 'http://sjc1.vultrobjects.com/ewnix-avatars/' + username.toLowerCase() + '/avatar.png';
-                imageExists(avatarURL, function(exists) {
+                imageBurper(avatarURL, function(exists, nonce) {
                     if (exists) {
                         kiwi.state.addUser(activeBuffer.networkid, {nick: username, avatar: {
-                            small: avatarURL
+                            small: avatarURL + "?" + nonce
                         }});
                     }
                 });
@@ -31,10 +36,10 @@ kiwi.plugin('custom-avatars', function(kiwi) {
     kiwi.on('irc.message', function(event, network) {
         var nick = event.nick;
         var avatarURL = 'http://sjc1.vultrobjects.com/ewnix-avatars/' + nick.toLowerCase() + '/avatar.png';
-        imageExists(avatarURL, function(exists) {
+        imageBurper(avatarURL, function(exists, nonce) {
             if (exists) {
                 kiwi.state.addUser(network.id, {nick: nick, avatar: {
-                    small: avatarURL
+                    small: avatarURL + "?" + nonce
                 }});
             }
         });
